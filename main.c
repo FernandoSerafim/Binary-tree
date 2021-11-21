@@ -42,8 +42,6 @@ void exibe_arvore(NO* raiz){
 
     if(raiz != NULL){
         printf("%d\n", raiz->dado);
-        //if(raiz->pai == NULL) printf("PAI DE TODOS OS NOS\n");
-        //else printf("%d\n", raiz->pai->dado);
         exibe_arvore(raiz->esquerda);
         exibe_arvore(raiz->direita);
     }
@@ -64,7 +62,7 @@ NO* encontra_filho(NO* raiz){
 NO* exclui_elemento(NO* raiz, int elemento){
 //0 filhos OK
 //1 filho OK
-//2 filhos ---> em andamento
+//2 filhos OK
 //VAMOS ADOTAR O FILHO MAIS À DIREITA DA SUBÁRVORE ESQUERDA
 
     NO* filho, *troca, *pai;
@@ -81,6 +79,7 @@ NO* exclui_elemento(NO* raiz, int elemento){
             troca->direita = raiz->direita;
             pai = troca->pai;
             pai->direita = NULL;//SUBSTITUINDO A POSIÇÃO DO TROCA POR NULL
+	        troca->pai = raiz->pai;
             free(raiz); //LEMBRANDO QUE TROCA ERA MEU ÚLTIMO NÓ À DIREITA
             raiz = NULL; //PORTANTO, SEU PAI PRECISA APONTAR PARA NULL
             return troca; //NA SUA POSIÇÃO
