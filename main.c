@@ -11,10 +11,6 @@ typedef struct no{
     struct no* direita;
 } NO;
 
-//criar nó; inserir novo nó; remover um nó; exibir árvore; opcional: Qtd elementos
-//SOMENTE A FUNÇÃO DE EXIBIR A ÁRVORE SERÁ SEM RETORNO (VOID)
-
-
 NO* aloca_no(){
     NO* novo_no =  malloc(sizeof(NO));
     novo_no->direita = NULL;
@@ -68,17 +64,27 @@ NO* encontra_filho(NO* raiz){
 NO* exclui_elemento(NO* raiz, int elemento){
 //0 filhos OK
 //1 filho OK
+//2 filhos ---> em andamento
+//VAMOS ADOTAR O FILHO MAIS À DIREITA DA SUBÁRVORE ESQUERDA
 
-    NO* filho, *pai;
+    NO* filho, *troca, *pai;
     int DirEsq;
 
     if(raiz == NULL) return NULL;
 
     if(raiz->dado == elemento){
-
         //PARA DELETAR NÓS QUE POSSUEM 2 FILHOS
-
-
+        if(raiz->esquerda != NULL && raiz->direita != NULL){
+            troca = raiz->esquerda;
+            if(troca != NULL) troca = troca->direita;//nó + à dir. da sub. esquerda
+            troca->esquerda = raiz->esquerda;//SUBSTITUIÇÃO DO NÓ
+            troca->direita = raiz->direita;
+            pai = troca->pai;
+            pai->direita = NULL;//SUBSTITUINDO A POSIÇÃO DO TROCA POR NULL
+            free(raiz); //LEMBRANDO QUE TROCA ERA MEU ÚLTIMO NÓ À DIREITA
+            raiz = NULL; //PORTANTO, SEU PAI PRECISA APONTAR PARA NULL
+            return troca; //NA SUA POSIÇÃO
+        }
 
         //PARA DELETAR NÓS FOLHAS
         if(raiz->direita == NULL && raiz->esquerda == NULL){
@@ -88,7 +94,7 @@ NO* exclui_elemento(NO* raiz, int elemento){
         }
 
         //PARA DELETAR NÓS COM 1 FILHOS
-        if(raiz->direita != NULL || raiz->esquerda != NULL){
+        if(raiz->direita == NULL || raiz->esquerda == NULL){
             filho = encontra_filho(raiz); //QUEM É O FILHO DA RAÍZ
             free(raiz);
             raiz = NULL;
@@ -135,7 +141,7 @@ int main()
 
     printf("Digite os valores que deseja armazenar\n");
 
-    while(contador < 6){
+    while(contador < 9){ //APENAS PARA FINS DE TESTE
         NO* novo = aloca_no();
         scanf("%d", &novo->dado);
         raiz = insere_elemento(raiz, novo);
